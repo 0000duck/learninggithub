@@ -1,0 +1,383 @@
+<?xml version="1.0"?>
+<robot name="mycar" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Defining the colors used in this robot -->
+    <material name="Black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="White">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="Blue">
+        <color rgba="0 0 1 1"/>
+    </material>
+
+    <material name="Red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+
+  <xacro:macro name="mycar_body">
+   <link name="base_footprint">
+            <visual>
+                <origin
+                   xyz="0 0 0"
+                   rpy="0 0 0" />
+                <geometry>
+                  <box size="0.001 0.001 0.001" />
+                  </geometry>
+            </visual>
+        </link>
+
+        <joint name="base_footprint_joint" type="fixed">
+            <origin xyz="0 0 0.5" rpy="0 0 0" />
+            <parent link="base_footprint"/>
+            <child link="base_link" />
+        </joint>   
+     
+   <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0952989418186704 2.84040379432776E-07 -0.0622358516397242"
+        rpy="0 0 0" />
+      <mass
+        value="30" />
+      <inertia ixx="1.4" ixy="0.0" ixz="0.0"
+                         iyy="3.5" iyz="0.0" izz="3.5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+          <gazebo reference="base_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+
+  <link
+
+    name="Link1">
+    <inertial>
+      <origin
+        xyz="-2.0353E-09 0.00013625 6.9439E-10"
+        rpy="0 0 0" />
+      <mass
+        value="0.6" />
+      <inertia ixx="0.006" ixy="0.0" ixz="0.0"
+                         iyy="0.00975" iyz="0.0" izz="0.006" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+          <gazebo reference="Link1">
+            <material>Gazebo/Black</material>
+        </gazebo>
+
+  <joint
+    name="Joint1"
+    type="continuous">
+    <origin
+      xyz="0.32896 0.235 -0.25"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link1" />
+    <axis
+      xyz="0 1 0" />
+    <dynamics damping="0.1"/>
+     <limit effort="10000" velocity="5" />
+      <joint_properties damping="0.0" friction="0.0" />
+  </joint>
+<!-- Transmission is important to link the joints and the controller -->
+      <transmission name="wheel_1_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="Joint1" />
+            <actuator name="wheel_1_joint_motor">
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+      </transmission>  
+  <link
+    name="Link2">
+    <inertial>
+      <origin
+        xyz="1.3902E-09 -0.00013625 1.6407E-09"
+        rpy="0 0 0" />
+      <mass
+        value="0.6" />
+      <inertia ixx="0.006" ixy="0.0" ixz="0.0"
+                         iyy="0.00975" iyz="0.0" izz="0.006" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+      <gazebo reference="Link2">
+            <material>Gazebo/Black</material>
+      </gazebo>
+  <joint
+    name="Joint2"
+    type="continuous">
+    <origin
+      xyz="0.32896 -0.235 -0.25"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link2" />
+    <axis
+      xyz="0 1 0" />
+     <dynamics damping="0.1"/>
+     <limit effort="10000" velocity="5" />
+      <joint_properties damping="0.0" friction="0.0" />
+  </joint>
+<!-- Transmission is important to link the joints and the controller -->
+      <transmission name="wheel_2_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="Joint2" />
+            <actuator name="wheel_2_joint_motor">
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+      </transmission>  
+  <link
+    name="Link3">
+    <inertial>
+      <origin
+        xyz="2.1251E-09 0.00013625 -3.2932E-10"
+        rpy="0 0 0" />
+      <mass
+        value="3" />
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0"
+                         iyy="0.005" iyz="0.0" izz="0.03" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+        <gazebo reference="Link3">
+            <material>Gazebo/Black</material>
+        </gazebo>
+  <joint
+    name="Joint3"
+    type="continuous">
+    <origin
+      xyz="-0.34896 0.235 -0.25"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link3" />
+    <axis
+      xyz="0 1 0" />
+    <dynamics damping="0.1"/>
+     <limit effort="10000" velocity="5" />
+      <joint_properties damping="0.0" friction="0.0" />
+  </joint>  
+<!-- Transmission is important to link the joints and the controller -->
+      <transmission name="wheel_3_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="Joint3" />
+            <actuator name="wheel_3_joint_motor">
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+      </transmission>     
+  <link
+    name="Link4">
+    <inertial>
+      <origin
+        xyz="-1.8165E-09 -0.00013625 1.1509E-09"
+        rpy="0 0 0" />
+      <mass
+        value="3" />
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0"
+                         iyy="0.005" iyz="0.0" izz="0.03" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mycar_gazebo/meshes/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+        <gazebo reference="Link4">
+            <material>Gazebo/Black</material>
+        </gazebo>
+  <joint
+    name="Joint4"
+    type="continuous">
+    <origin
+      xyz="-0.34896 -0.235 -0.25"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link4" />
+    <axis
+      xyz="0 1 0" />
+    <dynamics damping="0.1"/>
+     <limit effort="10000" velocity="5" />
+      <joint_properties damping="0.0" friction="0.0" />
+  </joint>
+<!-- Transmission is important to link the joints and the controller -->
+        <transmission name="wheel_4_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="Joint4" />
+            <actuator name="wheel_4_joint_motor">
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>  
+      
+        <!-- controller -->
+        <gazebo>
+            <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+                <rosDebugLevel>Debug</rosDebugLevel>
+                <publishWheelTF>true</publishWheelTF>
+                <robotNamespace>/</robotNamespace>
+                <publishTf>1</publishTf>
+                <publishWheelJointState>true</publishWheelJointState>
+                <alwaysOn>true</alwaysOn>
+                <updateRate>100.0</updateRate>
+                <legacyMode>true</legacyMode>
+                <leftJoint>Joint4</leftJoint>
+                <rightJoint>Joint3</rightJoint>
+                <wheelSeparation>0.80</wheelSeparation>
+                <wheelDiameter>0.30</wheelDiameter>
+                <broadcastTF>1</broadcastTF>
+                <wheelTorque>200</wheelTorque>
+                <wheelAcceleration>12</wheelAcceleration>
+                <commandTopic>cmd_vel</commandTopic>
+                <odometryFrame>odom</odometryFrame> 
+                <odometryTopic>odom</odometryTopic> 
+                <robotBaseFrame>base_footprint</robotBaseFrame>
+            </plugin>
+<!-- controller -->
+      
+            <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+                <rosDebugLevel>Debug</rosDebugLevel>
+                <publishWheelTF>true</publishWheelTF>
+                <robotNamespace>/</robotNamespace>
+                <publishTf>1</publishTf>
+                <publishWheelJointState>true</publishWheelJointState>
+                <alwaysOn>true</alwaysOn>
+                <updateRate>100.0</updateRate>
+                <legacyMode>true</legacyMode>
+                <leftJoint>Joint2</leftJoint>
+                <rightJoint>Joint1</rightJoint>
+                <wheelSeparation>0.800</wheelSeparation>
+                <wheelDiameter>0.300</wheelDiameter>
+                <broadcastTF>1</broadcastTF>
+                <wheelTorque>200</wheelTorque>
+                <wheelAcceleration>12</wheelAcceleration>
+                <commandTopic>cmd_vel</commandTopic>
+                <odometryFrame>odom</odometryFrame> 
+                <odometryTopic>odom</odometryTopic> 
+                <robotBaseFrame>base_footprint</robotBaseFrame>
+            </plugin>
+        </gazebo> 
+ </xacro:macro>
+
+</robot>

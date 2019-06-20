@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot name="mycar" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find mycar_gazebo)/urdf/mycar_body.urdf.xacro" />
+    <xacro:include filename="$(find mycar_gazebo)/urdf/rplidar.xacro" />
+
+    <!-- MRobot机器人平台 -->
+    <mycar_body/>
+
+<!-- Attach the Kinect -->
+	<joint name="rplidar_joint" type="fixed">
+		<origin xyz="0 0 0.15" rpy="0 0 0" />
+		<parent link="base_link"/>
+		<child link="laser_link"/>
+	</joint>
+
+    <xacro:rplidar prefix="laser"/>
+
+</robot>
